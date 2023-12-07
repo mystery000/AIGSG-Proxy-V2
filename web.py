@@ -1,28 +1,25 @@
 import os
-import io
 import sys
 import json
 import asyncio
 import logging
 import uvicorn
 from db import Db
+from conf import Conf
 import logging.handlers
 from yaml import load, dump
 import multiprocessing as mp
-from logging import StreamHandler
-from typing import Dict, List, Set, Union
+from typing import Dict, Set, Union
 from fastapi.responses import FileResponse
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi import FastAPI, WebSocket, Request, Response, HTTPException
+from fastapi import FastAPI, WebSocket, Request, Response
 
 from yaml import load, dump
 try:
     from yaml import CLoader as Loader
 except ImportError:
     from yaml import Loader
-
-from watcher import Watcher
 
 app = FastAPI()
 origins = [
@@ -40,8 +37,6 @@ class UnicornException(Exception):
     def __init__(self, name: str):
         self.name = name
 
-
-
 @app.exception_handler(UnicornException)
 async def unicorn_exception_handler(request: Request, exc: UnicornException):
     logging.basicConfig(
@@ -49,7 +44,7 @@ async def unicorn_exception_handler(request: Request, exc: UnicornException):
             level=logging.INFO,
             handlers=[
                 logging.handlers.RotatingFileHandler(
-                    "webservice.txt",
+                    "logs/web_svc.txt",
                     maxBytes=1024 * 1024,
                     backupCount=100),
             ]
@@ -63,7 +58,7 @@ async def unicorn_exception_handler(request: Request, exc: UnicornException):
     )
 
 
-from conf import Conf
+
 conf = Conf("conf.yaml")
 
 app_queue: mp.Queue = None
@@ -71,19 +66,23 @@ log_queues: Set[asyncio.Queue] = set()
 
 @app.get("/api/stationdata/{station_id}")
 async def get_station_data(request: Request, station_id: str = "", From: Union[str, None] = None):
-    if From == None: raise UnicornException(name="WrongURL")
-    _db: Db = Db()
-    result  = _db.get_pos(station_id,From)
     logging.basicConfig(
             format="[%(asctime)s] %(message)s",
             level=logging.INFO,
             handlers=[
                 logging.handlers.RotatingFileHandler(
-                    "logs/Webservice-POS.txt",
-                    maxBytes=1024 * 1024,
+                    "logs/web_svc.txt",
+                    maxBytes=1024 * 1024 * 1024,
                     backupCount=100),
             ]
         )
+
+    if From == None: 
+        raise UnicornException(name="WrongURL")
+    
+    _db: Db = Db()
+    result  = _db.get_pos(station_id,From)
+
     clientIP = request.client.host
     serverIP = conf.get_agent_host()
     serverPort = conf.get_agent_port()
@@ -96,6 +95,7 @@ async def get_station_data(request: Request, station_id: str = "", From: Union[s
 async def get_samba_data(request: Request, samba_id: str = "", From: Union[str, None] = None):
     if From == None: raise UnicornException(name="WrongURL")
     _db: Db = Db()
+    
     result  = _db.get_samba(samba_id,From)
 
     logging.basicConfig(
@@ -103,8 +103,8 @@ async def get_samba_data(request: Request, samba_id: str = "", From: Union[str, 
             level=logging.INFO,
             handlers=[
                 logging.handlers.RotatingFileHandler(
-                    "logs/Webservice-SAMBA.txt",
-                    maxBytes=1024 * 1024,
+                    "logs/web_svc.txt",
+                    maxBytes=1024 * 1024 * 1024,
                     backupCount=100),
             ]
         )
@@ -115,7 +115,6 @@ async def get_samba_data(request: Request, samba_id: str = "", From: Union[str, 
 
     url = serverIP + ":" + str(serverPort) + "/api/samba/" + samba_id + "?From=" + From
     logging.info(clientIP + "---->" + url)
-
 
     return {"data": result}
 
@@ -128,21 +127,8 @@ def do_push_log(obj: Dict):
         except:
             pass
 
-#class WebsocketHandler(StreamHandler):
-#    def __init__(self):
-#        StreamHandler.__init__(self)
-
-#    def emit(self, record):
-#        msg = self.format(record)
-#        do_push_log({
-#            "type": "web",
-#            "message": msg
-#        })
-
-
 def root_dir():
     return os.path.abspath(os.path.join(os.path.dirname(__file__), "config"))
-
 
 def get_resource(path):
     mimetypes = {
@@ -157,36 +143,31 @@ def get_resource(path):
     with open(complete_path, "rb") as fp:
         return Response(content=fp.read(), media_type=mimetype)
 
-
 @app.get("/download-sambalog")
 async def download_applog():
     return FileResponse(
-        path="samba.txt",
-        filename="samba.txt",
+        path="logs/samba_svc.txt",
+        filename="samba_svc.txt",
         media_type="application/octet-stream")
-
 
 @app.get("/download-proxylog")
 async def download_proxylog():
     return FileResponse(
-        path="proxy.txt",
-        filename="proxy.txt",
+        path="/logs/proxy_svc.txt",
+        filename="proxy_svc.txt",
         media_type="application/octet-stream")
-
 
 @app.get("/download-weblog")
 async def download_applog():
     return FileResponse(
-        path="web.txt",
-        filename="web.txt",
+        path="logs/web_svc.txt",
+        filename="web_svc.txt",
         media_type="application/octet-stream")
-
 
 @app.get("/cfg")
 async def get_cfg():
     with open("conf.yaml", "rt") as fp:
         return load(fp, Loader=Loader)
-
 
 @app.post("/cfg")
 async def set_cfg(body: Dict):
@@ -195,7 +176,6 @@ async def set_cfg(body: Dict):
 
     return {}
 
-
 @app.post("/push_log")
 async def push_log(body: Dict):
     do_push_log(body)
@@ -203,7 +183,6 @@ async def push_log(body: Dict):
     return {
         "status": "ok"
     }
-
 
 @app.api_route("/{path_name:path}", methods=["GET"])
 def receiver(path_name: str):
@@ -222,7 +201,6 @@ def receiver(path_name: str):
             path_name = "index.html"
 
         return get_resource(path_name)
-
 
 @app.api_route("/{path_name:path}", methods=["POST"])
 async def ad_message(req: Request, path_name: str, NAME: str, IP: str, PORT: str):
@@ -248,7 +226,6 @@ async def ad_message(req: Request, path_name: str, NAME: str, IP: str, PORT: str
 
     return "<html><body><strong>\nSuccessfully Registered!\n</strong></body></html>"
 
-
 @app.websocket("/logging")
 async def websocket_endpoint(websocket: WebSocket):
     global log_queues
@@ -266,7 +243,6 @@ async def websocket_endpoint(websocket: WebSocket):
 
     log_queues.remove(new_queue)
 
-
 def run_web(queue: mp.Queue, log_to_file: bool, is_debug: bool = False):
     global app_queue
 
@@ -278,8 +254,8 @@ def run_web(queue: mp.Queue, log_to_file: bool, is_debug: bool = False):
             level=logging.INFO,
             handlers=[
                 logging.handlers.RotatingFileHandler(
-                    "logs/web.txt",
-                    maxBytes=1024 * 1024,
+                    "logs/web_svc.txt",
+                    maxBytes=1024 * 1024 * 1024,
                     backupCount=10),
             ]
         )
@@ -291,16 +267,15 @@ def run_web(queue: mp.Queue, log_to_file: bool, is_debug: bool = False):
                 logging.StreamHandler(sys.stdout),
             ]
         )
+
     logging.info("Web logging is working well")
     uvicorn.run(
         "web:app",
         host=conf.get_agent_host(),
         port=conf.get_agent_port(),
         reload=True,
-        debug=True,
         workers=1,
         log_level="info")
-
 
 if __name__ == "__main__":
     print("Beging called as program")

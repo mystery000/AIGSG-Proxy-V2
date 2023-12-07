@@ -1,27 +1,21 @@
 import re
 import sys
-import json
-import time
 import logging
-import asyncio
 import tempfile
 import requests
-from db import Db #SQLITE3 CONNECTION
+from db import Db
 from conf import Conf
 from samba import Samba
+from typing import Dict
 import logging.handlers
 from server import Server
-from unicodedata import name
 import multiprocessing as mp
 from kvdb import KVDB, DBValue
 from logging import StreamHandler
-from typing import List, Dict, Any
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
-from socket import socket, gethostbyname
+
 FILE_EXTENSION = 'dat'
-
-
 class WebsocketHandler(StreamHandler):
     _skip: bool
 
@@ -42,7 +36,6 @@ class WebsocketHandler(StreamHandler):
             })
         except:
             self._skip = True
-
 
 class App():
     _smb: Samba
@@ -204,7 +197,6 @@ class App():
 
     def start(self):
         self._start_servers()
-        # self._start_proxies()
 
         if self._conf.get_smb_enabled():
             self._connect_smb()
@@ -234,8 +226,8 @@ def run_app(queue: mp.Queue, log_to_file: bool):
             level=logging.INFO,
             handlers=[
                 logging.handlers.RotatingFileHandler(
-                    "logs/samba.txt",
-                    maxBytes=1024 * 1024,
+                    "logs/samba_svc.txt",
+                    maxBytes=1024 * 1024 * 1024,
                     backupCount=10),
                 WebsocketHandler()
             ]
@@ -262,4 +254,4 @@ def run_app(queue: mp.Queue, log_to_file: bool):
 
 if __name__ == "__main__":
     print("Beging called as program")
-    run_app(None, True)
+    run_app(None, False)

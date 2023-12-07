@@ -17,7 +17,7 @@ class Watcher():
 
         now = datetime.now()
         if self._last_check < rtime and now > rtime:
-            conn = sqlite3.connect('data.sqlite3')
+            conn = sqlite3.connect('collection.sqlite3')
             save_date = now.strftime("%d-%b-%Y-%H-%M")
             with open(f"{save_date}.sql", "w") as dump_file:
                 for line in conn.iterdump():

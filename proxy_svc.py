@@ -1,22 +1,15 @@
-import re
-import os
 import sys
 import json
-import socket
-import sqlite3
 import asyncio
 import logging
-import requests
-import datetime
-from db import Db  # SQLITE3 Connection
+from db import Db  
 from conf import Conf
 import logging.handlers
+from typing import Dict
 from tcp import TCPProxy
+from watcher import Watcher
 import multiprocessing as mp
 from logging import StreamHandler
-from typing import List, Tuple, Dict, Set
-
-from watcher import Watcher
 
 class WebsocketHandler(StreamHandler):
     _skip: bool
@@ -33,13 +26,8 @@ class WebsocketHandler(StreamHandler):
 
         try:
             pass
-            #requests.post(f"http://localhost/push_log", json={
-            #    "type": "proxy",
-            #    "message": msg
-            #})
         except:
             self._skip = True
-
 
 class App():
     _conf: Conf
@@ -142,42 +130,32 @@ def entry_point(queue: mp.Queue):
 
 
 def run_proxy(queue: mp.Queue, log_to_file: bool):
-    logging.basicConfig(
-        format="[%(asctime)s] %(message)s",
-        level=logging.INFO,
-        handlers=[
-            logging.handlers.RotatingFileHandler(
-                "proxy.txt",
-                maxBytes=1024 * 1024,
-                backupCount=10),
-            # WebsocketHandler()
-        ]
-    )
-    
+    if log_to_file:
+        logging.basicConfig(
+            format="[%(asctime)s] %(message)s",
+            level=logging.INFO,
+            handlers=[
+                logging.handlers.RotatingFileHandler(
+                    "logs/proxy_svc.txt",
+                    maxBytes=1024 * 1024 * 1024,
+                    backupCount=10),
+                WebsocketHandler()
+            ]
+        )
+    else:
+        logging.basicConfig(
+            format="[%(asctime)s] %(message)s",
+            level=logging.INFO,
+            handlers=[
+                logging.StreamHandler(sys.stdout),
+                WebsocketHandler()
+            ]
+        )
+
     entry_point(queue)
 
-
 def main():
-    # logging.basicConfig(
-    #     format="[%(asctime)s] %(message)s",
-    #     level=logging.DEBUG,
-    #     handlers=[
-    #         logging.StreamHandler(sys.stdout)
-    #     ]
-    # )
-    logging.basicConfig(
-        format="[%(asctime)s] %(message)s",
-        level=logging.INFO,
-        handlers=[
-            logging.handlers.RotatingFileHandler(
-                "logs/proxy.txt",
-                maxBytes=1024 * 1024,
-                backupCount=10),
-            # WebsocketHandler()
-        ]
-    )
-    entry_point(None)
-
+    run_proxy(None, False)
     
 if __name__ == "__main__":
     main()

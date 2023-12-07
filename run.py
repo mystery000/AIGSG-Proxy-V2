@@ -1,26 +1,27 @@
 import multiprocessing as mp
-
-from samba_svc import run_app
-from web import run_web
-# from proxy_svc import run_proxy
+from web import run_web as web_service
+from samba_svc import run_app as samba_service
+from proxy_svc import run_proxy as proxy_service
 
 
 def main():
-    queue = mp.Queue(maxsize=100)
+    try:
+        queue = mp.Queue(maxsize=100)
 
-    app = mp.Process(target=run_app, args=(queue, True))
-    app.start()
+        app = mp.Process(target=samba_service, args=(queue, True))
+        app.start()
 
-    web = mp.Process(target=run_web, args=(queue, True))
-    web.start()
+        web = mp.Process(target=web_service, args=(queue, True))
+        web.start()
 
-    # proxy = mp.Process(target=run_proxy, args=(queue, True))
-    # proxy.start()
+        proxy = mp.Process(target=proxy_service, args=(queue, True))
+        proxy.start()
 
-    app.join()
-    web.join()
-    # proxy.join()
-
+        app.join()
+        web.join()
+        proxy.join()
+    except:
+        print("Quitting...")
 
 if __name__ == "__main__":
     mp.set_start_method("spawn")

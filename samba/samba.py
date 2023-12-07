@@ -1,20 +1,15 @@
 import socket
 import logging
-from dataclasses import dataclass
-from typing import List, BinaryIO, Tuple, Any
-
-from smb.SMBConnection import SMBConnection
 from smb.base import SharedFile
-
-from .exceptions import ResolveHostAddressException
-
+from dataclasses import dataclass
+from typing import List, BinaryIO, Tuple
+from smb.SMBConnection import SMBConnection
 
 @dataclass
 class FileInfo:
     file_name: str
     is_directory: bool
     last_write_time: float
-
 
 class Samba():
     _conn: SMBConnection
@@ -43,7 +38,6 @@ class Samba():
             self._server_ip = socket.gethostbyname(server_name)
             logging.info(f"Server IP: { self._server_ip }")
         except socket.gaierror:
-            # raise ResolveHostAddressException()
             pass
 
         self._is_connected = False

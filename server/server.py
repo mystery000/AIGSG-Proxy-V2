@@ -1,10 +1,7 @@
-import logging
 import socket
 import select
-import os
-
+import logging
 from typing import List, Dict, Any
-
 
 class Server():
     _port: int
