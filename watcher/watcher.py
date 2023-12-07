@@ -19,14 +19,12 @@ class Watcher():
         if self._last_check < rtime and now > rtime:
             conn = sqlite3.connect('collection.sqlite3')
             save_date = now.strftime("%d-%b-%Y-%H-%M")
-            with open(f"{save_date}.sql", "w") as dump_file:
+
+            with open(f"backup/{save_date}.sql", "w") as dump_file:
                 for line in conn.iterdump():
                     dump_file.write('%s\n' % line)
+
             conn.execute("DELETE FROM pos_data")
             conn.commit()
-            conn.execute("VACUUM")
-            conn.commit()
-            conn.close()
-            exit()
 
         self._last_check = now

@@ -13,12 +13,13 @@ New-Item -ItemType Directory -Path "$TARGETDIR\samba"
 New-Item -ItemType Directory -Path "$TARGETDIR\server"
 New-Item -ItemType Directory -Path "$TARGETDIR\tcp"
 New-Item -ItemType Directory -Path "$TARGETDIR\logs"
+New-Item -ItemType Directory -Path "$TARGETDIR\backup"
 New-Item -ItemType Directory -Path "$TARGETDIR\watcher"
 
 Copy-Item -Path "icon.ico" -Destination $TARGETDIR
 Copy-Item -Path "..\*.py" -Destination $TARGETDIR
 Copy-Item -Path "..\watcher.txt" -Destination $TARGETDIR
-Copy-Item -Path "..\conf_prod.yaml" -Destination $TARGETDIR\conf.yaml
+Copy-Item -Path "..\conf.yaml" -Destination $TARGETDIR\conf.yaml
 Copy-Item -Path "..\conf\*.py" -Destination "$TARGETDIR\conf"
 Copy-Item -Path "..\db\*.py" -Destination "$TARGETDIR\db"
 Copy-Item -Path "..\kvdb\*.py" -Destination "$TARGETDIR\kvdb"
