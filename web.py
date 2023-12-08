@@ -45,8 +45,8 @@ async def unicorn_exception_handler(request: Request, exc: UnicornException):
             handlers=[
                 logging.handlers.RotatingFileHandler(
                     "logs/web_svc.txt",
-                    maxBytes=1024 * 1024,
-                    backupCount=100),
+                    maxBytes=1024 * 1024 * 100,
+                    backupCount=10),
             ]
         )
     clientIP = request.client.host
@@ -72,8 +72,8 @@ async def get_station_data(request: Request, station_id: str = "", From: Union[s
             handlers=[
                 logging.handlers.RotatingFileHandler(
                     "logs/web_svc.txt",
-                    maxBytes=1024 * 1024 * 1024,
-                    backupCount=100),
+                    maxBytes=1024 * 1024 * 100,
+                    backupCount=10),
             ]
         )
 
@@ -104,8 +104,8 @@ async def get_samba_data(request: Request, samba_id: str = "", From: Union[str, 
             handlers=[
                 logging.handlers.RotatingFileHandler(
                     "logs/web_svc.txt",
-                    maxBytes=1024 * 1024 * 1024,
-                    backupCount=100),
+                    maxBytes=1024 * 1024 * 100,
+                    backupCount=10),
             ]
         )
 
@@ -255,7 +255,7 @@ def run_web(queue: mp.Queue, log_to_file: bool, is_debug: bool = False):
             handlers=[
                 logging.handlers.RotatingFileHandler(
                     "logs/web_svc.txt",
-                    maxBytes=1024 * 1024 * 1024,
+                    maxBytes=1024 * 1024 * 100,
                     backupCount=10),
             ]
         )

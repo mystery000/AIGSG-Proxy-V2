@@ -1,10 +1,8 @@
 import pytz
 from . import models
-from datetime import timedelta
-from sqlalchemy.sql import func
+from datetime import datetime
 from operator import attrgetter
 from sqlalchemy.orm import Session
-from datetime import datetime, timezone
 
 def save_pos(db: Session, source: str, content: str, _BPSCreated: str):
     

@@ -227,7 +227,7 @@ def run_app(queue: mp.Queue, log_to_file: bool):
             handlers=[
                 logging.handlers.RotatingFileHandler(
                     "logs/samba_svc.txt",
-                    maxBytes=1024 * 1024 * 1024,
+                    maxBytes=1024 * 1024 * 100,
                     backupCount=10),
                 WebsocketHandler()
             ]

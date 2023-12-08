@@ -137,7 +137,7 @@ def run_proxy(queue: mp.Queue, log_to_file: bool):
             handlers=[
                 logging.handlers.RotatingFileHandler(
                     "logs/proxy_svc.txt",
-                    maxBytes=1024 * 1024 * 1024,
+                    maxBytes=1024 * 1024 * 100,
                     backupCount=10),
                 WebsocketHandler()
             ]

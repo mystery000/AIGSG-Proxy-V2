@@ -26,5 +26,8 @@ class Watcher():
 
             conn.execute("DELETE FROM pos_data")
             conn.commit()
+            conn.execute("VACUUM")
+            conn.commit()
+            conn.close()
 
         self._last_check = now
