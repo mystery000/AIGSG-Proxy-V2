@@ -15,6 +15,7 @@ New-Item -ItemType Directory -Path "$TARGETDIR\tcp"
 New-Item -ItemType Directory -Path "$TARGETDIR\logs"
 New-Item -ItemType Directory -Path "$TARGETDIR\backup"
 New-Item -ItemType Directory -Path "$TARGETDIR\watcher"
+New-Item -ItemType Directory -Path "$TARGETDIR\config"
 
 Copy-Item -Path "icon.ico" -Destination $TARGETDIR
 Copy-Item -Path "..\*.py" -Destination $TARGETDIR
@@ -25,16 +26,9 @@ Copy-Item -Path "..\db\*.py" -Destination "$TARGETDIR\db"
 Copy-Item -Path "..\kvdb\*.py" -Destination "$TARGETDIR\kvdb"
 Copy-Item -Path "..\samba\*.py" -Destination "$TARGETDIR\samba"
 Copy-Item -Path "..\server\*.py" -Destination "$TARGETDIR\server"
-Copy-Item -Path "..\config\*" -Destination "$TARGETDIR\config"
+Copy-Item -Path "..\config\*" -Destination "$TARGETDIR\config" -Recurse
 Copy-Item -Path "..\tcp\*" -Destination "$TARGETDIR\tcp"
 Copy-Item -Path "..\watcher\*.py" -Destination "$TARGETDIR\watcher"
-
-New-Item -ItemType Directory -Path "$TARGETDIR\config\static"
-New-Item -ItemType Directory -Path "$TARGETDIR\config\static\css"
-New-Item -ItemType Directory -Path "$TARGETDIR\config\static\js"
-Copy-Item -Path "..\config\static\css\*.css" -Destination "$TARGETDIR\config\static\css"
-Copy-Item -Path "..\config\static\js\*.js" -Destination "$TARGETDIR\config\static\js"
-
 Copy-Item -Path "python" -Destination $TARGETDIR -Recurse
 
 $CacheItems = Get-ChildItem -Path "$TARGETDIR\python" -Filter "__pycache__" -Recurse -Directory -Name
