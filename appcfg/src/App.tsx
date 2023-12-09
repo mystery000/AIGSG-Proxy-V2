@@ -1,12 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import axios from "axios";
 import { v4 as uuid } from "uuid";
 
 const BASE_DOMAIN = window.location.host;
-// const BASE_URL = `http://${BASE_DOMAIN}:8090`;
-const BASE_URL = `http://192.168.108.69:8090`;
+const BASE_URL = `http://${BASE_DOMAIN}`;
 
 type TAgent = {
   host: string;
@@ -131,12 +130,12 @@ function PropEditor(props: PropEditorProps) {
   let tabIndex = props.baseTabIndex;
 
   return (
-    <div>
-      <div className='bg-gray-300 mt-2'>
+    <div className='w-full'>
+      <div className='bg-gray-300 mt-2 p-1'>
         <strong>{props.title}</strong>
       </div>
       {arr.map((items, blockIndx) => (
-        <div className='border p-2 mt-1' key={`${blockIndx}_${items[1].value}`}>
+        <div className='border p-4 mt-1' key={`${blockIndx}_${items[1].value}`}>
           {props.isArray && (
             <div className='flex justify-end'>
               <button
@@ -217,6 +216,8 @@ var defaultCfg: TCfgObj = {
 function Config() {
   const [cfg, setCfg] = useState<TCfgObj>(defaultCfg);
   const [loading, setLoading] = useState(true);
+  const [sortBy, setSortBy] = useState("location");
+  const [filterBy, setFilterBy] = useState("");
 
   useEffect(() => {
     async function readConfig() {
@@ -367,12 +368,42 @@ function Config() {
     setCfg(obj);
   }
 
+  const compare = useCallback(
+    (a: TProxy, b: TProxy) => {
+      switch (sortBy) {
+        case "location":
+          return a.location.localeCompare(b.location);
+        case "port":
+          return a.port - b.port;
+        case "name":
+          return a.name.localeCompare(b.name);
+        case "origin":
+          return a.origin.localeCompare(b.origin);
+        default:
+          return 0;
+      }
+    },
+    [sortBy]
+  );
+
+  const filter = useCallback(
+    (proxy: TProxy) => {
+      return (
+        proxy.location.toLowerCase().includes(filterBy.toLowerCase()) ||
+        proxy.name.toLowerCase().includes(filterBy.toLowerCase()) ||
+        proxy.origin.toLowerCase().includes(filterBy.toLowerCase()) ||
+        proxy.port.toString().includes(filterBy.toLowerCase())
+      );
+    },
+    [filterBy]
+  );
+
   let lastTabIndex = 0;
 
   if (loading) return <div className='spinner'></div>;
 
   return (
-    <div className='flex flex-col justify-center items-center'>
+    <div className='flex flex-col justify-center items-center w-1/3 m-auto'>
       <PropEditor
         isArray={false}
         title='Agent'
@@ -421,50 +452,76 @@ function Config() {
         deleter={deleter}
       />
 
+      <div className='flex justify-between items-center w-full mt-2'>
+        <div className='flex justify-between items-center gap-2 before:border-none'>
+          <strong>Sort By:</strong>
+          <select
+            onChange={(e) => setSortBy(e.target.value)}
+            className='outline-none cursor-pointer text-green-700 border-none'
+          >
+            <option value='location'>Location</option>
+            <option value='port'>Port</option>
+            <option value='name'>Name</option>
+            <option value='origin'>Origin</option>
+          </select>
+        </div>
+        <div className='flex justify-between items-center gap-2'>
+          <strong className='text-sm whitespace-nowrap'>Filter By</strong>
+          <input
+            className='shadow appearance-none border rounded w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+            value={filterBy}
+            onChange={(e) => setFilterBy(e.target.value)}
+          ></input>
+        </div>
+      </div>
+
       <PropEditor
         isArray={true}
         title='Proxies'
         baseTabIndex={2 + cfg.servers.length * 3}
-        items={cfg.proxies.map(
-          (proxy) =>
-            [
-              {
-                label: "Name",
-                value: proxy.name,
-                type: "string",
-              },
-              {
-                label: "Origin",
-                value: proxy.origin,
-                type: "string",
-              },
-              {
-                label: "Port",
-                value: proxy.port,
-                type: "integer",
-              },
-              {
-                label: "Auto Reconnect",
-                value: proxy.auto_connect,
-                type: "bool",
-              },
-              {
-                label: "Reconnect Interval",
-                value: proxy.reconnect_inverval,
-                type: "float",
-              },
-              {
-                label: "Alias",
-                value: proxy.alias,
-                type: "string",
-              },
-              {
-                label: "Location",
-                value: proxy.location,
-                type: "string",
-              },
-            ] as ValueInputProps[]
-        )}
+        items={cfg.proxies
+          .filter(filter)
+          .sort(compare)
+          .map(
+            (proxy) =>
+              [
+                {
+                  label: "Name",
+                  value: proxy.name,
+                  type: "string",
+                },
+                {
+                  label: "Origin",
+                  value: proxy.origin,
+                  type: "string",
+                },
+                {
+                  label: "Port",
+                  value: proxy.port,
+                  type: "integer",
+                },
+                {
+                  label: "Auto Reconnect",
+                  value: proxy.auto_connect,
+                  type: "bool",
+                },
+                {
+                  label: "Reconnect Interval",
+                  value: proxy.reconnect_inverval,
+                  type: "float",
+                },
+                {
+                  label: "Alias",
+                  value: proxy.alias,
+                  type: "string",
+                },
+                {
+                  label: "Location",
+                  value: proxy.location,
+                  type: "string",
+                },
+              ] as ValueInputProps[]
+          )}
         setter={updater}
         adder={adder}
         deleter={deleter}
@@ -519,7 +576,7 @@ function Config() {
         setter={updater}
       />
 
-      <div className='my-4 flex justify-center w-44'>
+      <div className='my-4 flex justify-center w-full'>
         <button
           className='w-full p-2 bg-green-600 text-white rounded shadow-md hover:bg-green-700 hover:shadow-lg focus:bg-green-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-800 active:shadow-lg transition duration-150 ease-in-out'
           onClick={() => {
