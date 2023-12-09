@@ -5,7 +5,8 @@ import axios from "axios";
 import { v4 as uuid } from "uuid";
 
 const BASE_DOMAIN = window.location.host;
-const BASE_URL = `http://${BASE_DOMAIN}`;
+// const BASE_URL = `http://${BASE_DOMAIN}`;
+const BASE_URL = `http://192.168.108.69:8090`;
 
 type TAgent = {
   host: string;
@@ -63,7 +64,7 @@ function ValueInput(props: ValueInputProps) {
 
   return (
     <>
-      <div className='h-full'>
+      <div className='h-full flex items-center'>
         <p className='my-0 py-0'>{props.label}</p>
       </div>
       {(() => {
@@ -82,9 +83,8 @@ function ValueInput(props: ValueInputProps) {
                   }
                 }}
               />
-
               <label
-                className='toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer'
+                className='toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer align-middle'
                 htmlFor={newId}
               ></label>
             </div>
@@ -218,6 +218,7 @@ function Config() {
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState("location");
   const [filterBy, setFilterBy] = useState("");
+  const [filteredProxies, setFilteredProxies] = useState<TProxy[]>([]);
 
   useEffect(() => {
     async function readConfig() {
@@ -300,6 +301,7 @@ function Config() {
 
   function adder(title: string) {
     let obj: TCfgObj = { ...cfg };
+    setFilterBy("");
 
     switch (title) {
       case "Servers":
@@ -368,8 +370,8 @@ function Config() {
     setCfg(obj);
   }
 
-  const compare = useCallback(
-    (a: TProxy, b: TProxy) => {
+  useEffect(() => {
+    const compare = (a: TProxy, b: TProxy) => {
       switch (sortBy) {
         case "location":
           return a.location.localeCompare(b.location);
@@ -382,21 +384,23 @@ function Config() {
         default:
           return 0;
       }
-    },
-    [sortBy]
-  );
+    };
+    setCfg((prev) => ({ ...prev, proxies: prev.proxies.sort(compare) }));
+  }, [sortBy]);
 
-  const filter = useCallback(
-    (proxy: TProxy) => {
-      return (
-        proxy.location.toLowerCase().includes(filterBy.toLowerCase()) ||
-        proxy.name.toLowerCase().includes(filterBy.toLowerCase()) ||
-        proxy.origin.toLowerCase().includes(filterBy.toLowerCase()) ||
-        proxy.port.toString().includes(filterBy.toLowerCase())
-      );
-    },
-    [filterBy]
-  );
+  useEffect(() => {
+    const filter = (proxy: TProxy) => {
+      if (!filterBy) return true;
+      const keyword = filterBy.toLowerCase();
+      const isMatch =
+        proxy.location.toLowerCase().includes(keyword) ||
+        proxy.name.toLowerCase().includes(keyword) ||
+        proxy.origin.toLowerCase().includes(keyword) ||
+        proxy.port.toString().includes(keyword);
+      return isMatch;
+    };
+    setFilteredProxies(cfg.proxies.filter(filter));
+  }, [filterBy, cfg, setFilteredProxies]);
 
   let lastTabIndex = 0;
 
@@ -479,49 +483,46 @@ function Config() {
         isArray={true}
         title='Proxies'
         baseTabIndex={2 + cfg.servers.length * 3}
-        items={cfg.proxies
-          .filter(filter)
-          .sort(compare)
-          .map(
-            (proxy) =>
-              [
-                {
-                  label: "Name",
-                  value: proxy.name,
-                  type: "string",
-                },
-                {
-                  label: "Origin",
-                  value: proxy.origin,
-                  type: "string",
-                },
-                {
-                  label: "Port",
-                  value: proxy.port,
-                  type: "integer",
-                },
-                {
-                  label: "Auto Reconnect",
-                  value: proxy.auto_connect,
-                  type: "bool",
-                },
-                {
-                  label: "Reconnect Interval",
-                  value: proxy.reconnect_inverval,
-                  type: "float",
-                },
-                {
-                  label: "Alias",
-                  value: proxy.alias,
-                  type: "string",
-                },
-                {
-                  label: "Location",
-                  value: proxy.location,
-                  type: "string",
-                },
-              ] as ValueInputProps[]
-          )}
+        items={filteredProxies.map(
+          (proxy) =>
+            [
+              {
+                label: "Name",
+                value: proxy.name,
+                type: "string",
+              },
+              {
+                label: "Origin",
+                value: proxy.origin,
+                type: "string",
+              },
+              {
+                label: "Port",
+                value: proxy.port,
+                type: "integer",
+              },
+              {
+                label: "Auto Reconnect",
+                value: proxy.auto_connect,
+                type: "bool",
+              },
+              {
+                label: "Reconnect Interval",
+                value: proxy.reconnect_inverval,
+                type: "float",
+              },
+              {
+                label: "Alias",
+                value: proxy.alias,
+                type: "string",
+              },
+              {
+                label: "Location",
+                value: proxy.location,
+                type: "string",
+              },
+            ] as ValueInputProps[]
+        )}
         setter={updater}
         adder={adder}
         deleter={deleter}
