@@ -39,7 +39,7 @@ proxies:
     reconnect_inverval: 10
   - alias: STM Contagem 17
     auto_connect: true
-    location: Ukraine
+    location: Canada
     name: STM Contagem 17
     origin: 192.168.108.69:2006
     port: 6817

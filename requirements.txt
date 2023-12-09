@@ -1,0 +1,4 @@
+PyJWT=2.8.0
+passlib=1.7.4
+fastapi=0.95.2
+python-dotenv=1.0.0

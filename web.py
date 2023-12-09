@@ -22,6 +22,7 @@ except ImportError:
     from yaml import Loader
 
 app = FastAPI()
+
 origins = [
     "http://localhost:3000",
 ]
@@ -56,7 +57,6 @@ async def unicorn_exception_handler(request: Request, exc: UnicornException):
         status_code=418,
         content={"message": "The request has an invalid URL format"},
     )
-
 
 
 conf = Conf("conf.yaml")

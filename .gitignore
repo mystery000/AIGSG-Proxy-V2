@@ -7,3 +7,4 @@ backup
 *.sqlite3
 installer/**
 installer/FILES
+.env

@@ -5,8 +5,7 @@ import axios from "axios";
 import { v4 as uuid } from "uuid";
 
 const BASE_DOMAIN = window.location.host;
-// const BASE_URL = `http://${BASE_DOMAIN}`;
-const BASE_URL = `http://192.168.108.69:8090`;
+const BASE_URL = `http://${BASE_DOMAIN}`;
 
 type TAgent = {
   host: string;
