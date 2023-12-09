@@ -2,38 +2,44 @@ agent:
   host: 192.168.108.69
   port: 8090
 proxies:
-  - alias: "STM Contagem 15"
+  - alias: STM Contagem 15
     auto_connect: true
+    location: Brazil
     name: STM Contagem 15
     origin: 192.168.108.69:2001
     port: 6815
     reconnect_inverval: 10
-  - alias: "FSMAE015"
+  - alias: FSMAE015
     auto_connect: true
+    location: United States
     name: FSMAE015
     origin: 192.168.108.69:2002
     port: 6802
     reconnect_inverval: 2
-  - alias: "STM Contagem 05"
+  - alias: STM Contagem 05
     auto_connect: true
+    location: United States
     name: STM Contagem 05
     origin: 192.168.108.69:2003
     port: 6805
     reconnect_inverval: 10
-  - alias: "STM Contagem 07"
+  - alias: STM Contagem 07
     auto_connect: true
+    location: Brazil
     name: STM Contagem 07
     origin: 192.168.108.69:2004
     port: 6807
     reconnect_inverval: 10
-  - alias: "STM Contagem 14"
+  - alias: STM Contagem 14
     auto_connect: true
+    location: Ukraine
     name: STM Contagem 14
     origin: 192.168.108.69:2005
     port: 6814
     reconnect_inverval: 10
-  - alias: "STM Contagem 17"
+  - alias: STM Contagem 17
     auto_connect: true
+    location: Ukraine
     name: STM Contagem 17
     origin: 192.168.108.69:2006
     port: 6817
@@ -45,7 +51,7 @@ servers:
 smb:
   enabled: true
   interval_in_seconds: 5
-  password: "dota"
+  password: dota
   reconnect_inverval: 10
   root: /
   server: 192.168.108.69
