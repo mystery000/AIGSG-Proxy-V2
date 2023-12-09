@@ -6,7 +6,7 @@ import { v4 as uuid } from "uuid";
 
 const BASE_DOMAIN = window.location.host;
 // const BASE_URL = `http://${BASE_DOMAIN}:8090`;
-const BASE_URL = `http://localhost:8090`;
+const BASE_URL = `http://192.168.108.69:8090`;
 
 type TAgent = {
   host: string;
@@ -216,7 +216,7 @@ var defaultCfg: TCfgObj = {
 
 function Config() {
   const [cfg, setCfg] = useState<TCfgObj>(defaultCfg);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function readConfig() {

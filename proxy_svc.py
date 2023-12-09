@@ -59,6 +59,7 @@ class App():
             inst = TCPProxy(
                 db=self._sqlite_db,
                 name=proxy.name,
+                location=proxy.location,
                 listen_host="0.0.0.0",
                 listen_port=proxy.port,
                 origin_host=host,
@@ -85,6 +86,7 @@ class App():
                         name = msg["NAME"]
                         ip = msg["IP"]
                         port = int(msg["PORT"])
+                        print(msg)
                         logging.info(f"IP={ ip }, NAME={ name }, PORT={ port }")
 
                         if name not in self._proxy_by_name:

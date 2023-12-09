@@ -11,6 +11,7 @@ from .tcpconnectionhandler import TCPConnectionHandler
 class TCPProxy(TCPConnectionHandler):
     _db: Db
     _name: str
+    _location: str
     _listen_host: str
     _listen_port: int
     _origin_host: str
@@ -32,6 +33,7 @@ class TCPProxy(TCPConnectionHandler):
         self,
         db: Db,
         name: str,
+        location: str,
         listen_host: str,
         listen_port: int,
         origin_host: str,
@@ -41,7 +43,7 @@ class TCPProxy(TCPConnectionHandler):
     ) -> None:
         self._db = db
         self._name = name
-
+        self._location = location
         self._listen_host = listen_host
         self._listen_port = listen_port
         self._origin_host = origin_host
@@ -232,7 +234,7 @@ class TCPProxy(TCPConnectionHandler):
         data: bytes
     ):
         try:
-            self._db.save_pos(self._name, data.decode())
+            self._db.save_pos(self._name, data.decode(), self._location, )
         except:
             logging.exception(f"Failed to save data received '{ self._name }'")
 

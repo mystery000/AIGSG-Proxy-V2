@@ -4,21 +4,23 @@ from datetime import datetime
 from operator import attrgetter
 from sqlalchemy.orm import Session
 
-def save_pos(db: Session, source: str, content: str, _BPSCreated: str):
+def save_pos(db: Session, source: str, content: str, location: str, _BPSCreated: str):
     
     if _BPSCreated == None:
         row = models.PosData(
-            created_at=datetime.now(pytz.timezone('America/Sao_Paulo')),
             source=source,
-            content=content)
+            content=content,
+            location=location,
+            created_at=datetime.now(pytz.timezone('America/Sao_Paulo')))
 
         db.add(row)
         db.commit()
     else:
         row = models.PosData(
-            created_at=datetime.strptime(_BPSCreated, '%Y-%m-%d %H:%M:%S'),
             source=source,
-            content=content)
+            content=content,
+            location=location,
+            created_at=datetime.strptime(_BPSCreated, '%Y-%m-%d %H:%M:%S'))
 
         db.add(row)
         db.commit()

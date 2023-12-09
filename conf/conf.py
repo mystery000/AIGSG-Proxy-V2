@@ -20,6 +20,7 @@ class ProxyInfo():
     origin: str
     port: int
     name: str
+    location: str
     auto_connect: bool
     reconnect_interval_in_seconds: float
 
@@ -79,12 +80,14 @@ class Conf():
                 origin = proxy["origin"]
                 port = int(proxy["port"])
                 name = proxy["name"]
+                location = proxy["location"]
                 auto_connect = proxy["auto_connect"]
                 reconnect_inverval = float(proxy["reconnect_inverval"])
                 self._proxies.append(ProxyInfo(
                     origin=origin,
                     port=port,
                     name=name,
+                    location=location,
                     auto_connect=auto_connect,
                     reconnect_interval_in_seconds=reconnect_inverval
                 ))

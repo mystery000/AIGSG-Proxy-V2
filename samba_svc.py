@@ -126,9 +126,9 @@ class App():
         
         # SMB save shared files to sqlite database
         parsed_xml_data, _BPSCreated = self._parse_xml_data(xml_data)
-        self._sqlite_db.save_pos(serial, parsed_xml_data, _BPSCreated)
+        self._sqlite_db.save_pos(serial, parsed_xml_data, None, _BPSCreated)
         logging.info("SMB shared file is saved to SQLite")
-        logging.info("  Done")
+        logging.info("Done")
         return True
 
     def _parse_xml_data(self, xml_data: bytes):
