@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import json
 import asyncio
@@ -109,6 +110,12 @@ def get_current_user(token: str = Security(oauth2_scheme)):
     return db_user
 
 async def auth_middleware(request: Request, call_next):
+    # The paths to exclude from the middleware
+    EXCLUDE_PATHS_RE = re.compile(r'^/api/(login|register)$')
+    print(request.url.path, EXCLUDE_PATHS_RE)
+    if EXCLUDE_PATHS_RE.match(str(request.url.path)):
+        return await call_next(request)    
+
     try:
         token = request.headers.get("Authorization")
         if token is None:
@@ -118,11 +125,14 @@ async def auth_middleware(request: Request, call_next):
         else:
             return JSONResponse(status_code=401, content={'detail': 'Invalid token type'})
         
-        response = await call_next(request)
-        return response
-    
+        get_current_user(token)
+
+        return await call_next(request)
+     
+    except HTTPException as e:
+        return JSONResponse(status_code=e.status_code, content={'detail': e.detail})
     except Exception as e:
-        return JSONResponse(status_code=400, content={'detail': str(e)})
+        return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 app.middleware('http')(auth_middleware)
 
@@ -177,7 +187,7 @@ class LoginForm(BaseModel):
     email: str
     password: str
 
-@app.post("/api/token")
+@app.post("/api/login")
 async def login_user(credential: LoginForm):
     user = authenticate_user(credential.email, credential.password)
     if not user:
