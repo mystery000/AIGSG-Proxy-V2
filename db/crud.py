@@ -38,3 +38,19 @@ def get_samba(db: Session, source: str, created_at: str) -> None:
     posData.sort(key = attrgetter('TimeStamp'), reverse = False)
 
     return posData
+
+def save_user(db: Session, username: str, email: str, hashed_password: str, disabled: bool = False):
+    row = models.UserData(
+        username=username, 
+        email=email, 
+        hashed_password=hashed_password,
+        disabled=disabled,
+        created_at=datetime.now()
+    )
+    db.add(row)
+    db.commit()
+
+
+def get_user(db: Session, email: str):
+    db_user = db.query(models.UserData).filter(models.UserData.email == email).first()
+    return db_user

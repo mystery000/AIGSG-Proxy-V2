@@ -1,6 +1,6 @@
 from typing import Any
-from .crud import save_pos, get_pos, get_samba
 from .database import engine, SessionLocal, Base
+from .crud import save_pos, get_pos, get_samba, save_user, get_user
 
 
 class Db():
@@ -18,3 +18,9 @@ class Db():
 
     def get_samba(self, source: str, created_at: str):
         return get_samba(self._db, source, created_at)
+    
+    def save_user(self, username: str, email: str, hashed_password: str, disabled: bool = False):
+        return save_user(self._db, username, email, hashed_password, disabled)
+    
+    def get_user(self, email: str):
+        return get_user(self._db, email)

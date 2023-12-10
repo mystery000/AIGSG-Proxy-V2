@@ -9,11 +9,18 @@ from conf import Conf
 import logging.handlers
 from yaml import load, dump
 import multiprocessing as mp
+from jose import jwt, JWTError
+from pydantic import BaseModel
+from dotenv import load_dotenv
 from typing import Dict, Set, Union
+from datetime import datetime, timedelta
+from passlib.context import CryptContext
 from fastapi.responses import FileResponse
 from fastapi.responses import JSONResponse
+from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, WebSocket, Request, Response
+from fastapi import FastAPI, Depends, HTTPException, status, Security
 
 from yaml import load, dump
 try:
@@ -22,6 +29,8 @@ except ImportError:
     from yaml import Loader
 
 app = FastAPI()
+
+sqlite_db: Db = Db()
 
 origins = [
     "http://localhost:3000",
@@ -33,6 +42,89 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+load_dotenv()
+
+# Secret key to encode JWT token
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
+
+# Password context for hashing
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+# OAuth2 password bearer token
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+# Function to verify passwords
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
+
+# Function to authenticate user
+def authenticate_user(email: str, password: str):
+    user = sqlite_db.get_user(email)
+    if not user:
+        return False
+    if not verify_password(password, user.hashed_password):
+        return False
+    return user
+
+def create_access_token(data: dict, expires_delta: timedelta | None = None):
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(minutes=15)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+def get_password_hash(password: str) -> str:
+    return pwd_context.hash(password)
+
+def verify_token(token: str) -> bool:
+    exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer "}
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_email = payload.get("sub")
+        if user_email is None:
+            raise exception
+        return user_email
+    except JWTError:
+        raise exception
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+def get_current_user(token: str = Security(oauth2_scheme)):
+    user_email = verify_token(token)
+    db_user = sqlite_db.get_user(user_email)
+
+    if db_user.disabled is True:
+        raise HTTPException(status_code=400, detail="Your account is disabled.")
+    
+    return db_user
+
+async def auth_middleware(request: Request, call_next):
+    try:
+        token = request.headers.get("Authorization")
+        if token is None:
+            return JSONResponse(status_code=401, content={'detail': 'Not authenticated'})
+        if token.startswith("Bearer "):
+            token = token[7:]
+        else:
+            return JSONResponse(status_code=401, content={'detail': 'Invalid token type'})
+        
+        response = await call_next(request)
+        return response
+    
+    except Exception as e:
+        return JSONResponse(status_code=400, content={'detail': str(e)})
+    
+app.middleware('http')(auth_middleware)
 
 class UnicornException(Exception):
     def __init__(self, name: str):
@@ -58,11 +150,46 @@ async def unicorn_exception_handler(request: Request, exc: UnicornException):
         content={"message": "The request has an invalid URL format"},
     )
 
-
 conf = Conf("conf.yaml")
 
 app_queue: mp.Queue = None
 log_queues: Set[asyncio.Queue] = set()
+
+class RegisterForm(BaseModel):
+    username: str
+    email: str
+    password: str
+
+@app.post("/api/register")
+async def register_user(user: RegisterForm):
+    db_user = sqlite_db.get_user(user.email)
+    if db_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    
+    sqlite_db.save_user(
+        username=user.username,
+        email=user.email,
+        hashed_password=get_password_hash(user.password)
+    )
+    return {"msg": "Registration successful!"}
+
+class LoginForm(BaseModel):
+    email: str
+    password: str
+
+@app.post("/api/token")
+async def login_user(credential: LoginForm):
+    user = authenticate_user(credential.email, credential.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(data={"sub": user.email}, expires_delta=access_token_expires)
+    return {"access_token": access_token, "token_type": "bearer"}
+
 
 @app.get("/api/stationdata/{station_id}")
 async def get_station_data(request: Request, station_id: str = "", From: Union[str, None] = None):
@@ -80,8 +207,7 @@ async def get_station_data(request: Request, station_id: str = "", From: Union[s
     if From == None: 
         raise UnicornException(name="WrongURL")
     
-    _db: Db = Db()
-    result  = _db.get_pos(station_id,From)
+    result  = Db().get_pos(station_id,From)
 
     clientIP = request.client.host
     serverIP = conf.get_agent_host()
@@ -94,9 +220,8 @@ async def get_station_data(request: Request, station_id: str = "", From: Union[s
 @app.get("/api/samba/{samba_id}")
 async def get_samba_data(request: Request, samba_id: str = "", From: Union[str, None] = None):
     if From == None: raise UnicornException(name="WrongURL")
-    _db: Db = Db()
     
-    result  = _db.get_samba(samba_id,From)
+    result  = Db().get_samba(samba_id,From)
 
     logging.basicConfig(
             format="[%(asctime)s] %(message)s",
