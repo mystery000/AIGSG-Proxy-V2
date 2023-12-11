@@ -5,6 +5,5 @@ conf_prod.yaml
 logs
 backup
 *.sqlite3
-installer/**
 installer/FILES
 .env
