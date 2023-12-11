@@ -582,7 +582,12 @@ function Config() {
         <button
           className='w-full p-2 bg-green-600 text-white rounded shadow-md hover:bg-green-700 hover:shadow-lg focus:bg-green-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-800 active:shadow-lg transition duration-150 ease-in-out'
           onClick={() => {
-            axios.post(`${BASE_URL}/cfg`, cfg);
+            axios.post(`${BASE_URL}/cfg`, cfg, {
+              headers: {
+                Acccept: "application/json",
+                Authorization: `Bearer ${accessToken}`,
+              },
+            });
           }}
         >
           Save
@@ -632,7 +637,7 @@ function Log() {
       </p>
       <div className='w-full h-full'>
         <div>
-          <p>
+          {/* <p>
             <a href={`${BASE_URL}/download-sambalog`} download={true}>
               Download samba logs
             </a>
@@ -646,7 +651,8 @@ function Log() {
             <a href={`${BASE_URL}/download-weblog`} download={true}>
               Download web logs
             </a>
-          </p>
+          </p> */}
+          <p className='text-green-600'>Coming soon...</p>
         </div>
 
         <div className='border m-2'>
