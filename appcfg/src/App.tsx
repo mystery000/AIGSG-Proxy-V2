@@ -1,11 +1,15 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import axios from "axios";
 import { v4 as uuid } from "uuid";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import PrivateRoutes from "./components/PrivateRoute";
+import { ManagedAppContext, useAuthContext } from "./context/AuthContext";
 
 const BASE_DOMAIN = window.location.host;
-const BASE_URL = `http://${BASE_DOMAIN}`;
+const BASE_URL = `http://${BASE_DOMAIN}/api`;
 
 type TAgent = {
   host: string;
@@ -188,11 +192,6 @@ function PropEditor(props: PropEditorProps) {
   );
 }
 
-async function getConfObj(): Promise<TCfgObj> {
-  let obj = await axios.get(`${BASE_URL}/cfg`);
-  return obj.data as TCfgObj;
-}
-
 var defaultCfg: TCfgObj = {
   agent: {
     host: "0.0.0.0",
@@ -218,19 +217,22 @@ function Config() {
   const [sortBy, setSortBy] = useState("location");
   const [filterBy, setFilterBy] = useState("");
   const [filteredProxies, setFilteredProxies] = useState<TProxy[]>([]);
+  const { accessToken } = useAuthContext();
 
   useEffect(() => {
     async function readConfig() {
-      setLoading(true);
-      setTimeout(async () => {
-        let obj = await getConfObj();
-        setCfg(obj);
-        setLoading(false);
-      }, 500);
+      if (!accessToken) return;
+      const response = await axios.get(`${BASE_URL}/cfg`, {
+        headers: {
+          Acccept: "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      setCfg(response.data as TCfgObj);
+      setLoading(false);
     }
-
     readConfig();
-  }, []);
+  }, [accessToken]);
 
   function updater(title: string, value: any, blockIdx?: number, idx?: number) {
     let obj: TCfgObj = { ...cfg };
@@ -664,12 +666,17 @@ function Log() {
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path='/' element={<Config />} />
-        <Route path='/log' element={<Log />} />
-      </Routes>
-    </Router>
+    <ManagedAppContext>
+      <Router>
+        <Routes>
+          <Route element={<PrivateRoutes />}>
+            <Route path='/' element={<Config />} />
+          </Route>
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
+        </Routes>
+      </Router>
+    </ManagedAppContext>
   );
 }
 

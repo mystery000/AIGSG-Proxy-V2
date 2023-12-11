@@ -1,7 +1,6 @@
 import os
 import re
 import sys
-import json
 import asyncio
 import logging
 import uvicorn
@@ -18,10 +17,12 @@ from datetime import datetime, timedelta
 from passlib.context import CryptContext
 from fastapi.responses import FileResponse
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi import FastAPI, WebSocket, Request, Response
-from fastapi import FastAPI, Depends, HTTPException, status, Security
+from fastapi import FastAPI, HTTPException, status, Security
 
 from yaml import load, dump
 try:
@@ -33,9 +34,44 @@ app = FastAPI()
 
 sqlite_db: Db = Db()
 
+class AuthMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+
+        if str(request.url.path).find("/api/") < 0:
+            return await call_next(request) 
+        
+        # The paths to exclude from the middleware
+        EXCLUDE_PATHS_RE = re.compile(r'^/api/(login|register)$')
+        
+        if EXCLUDE_PATHS_RE.match(str(request.url.path)):
+            return await call_next(request)   
+        
+        if str(request.url.path).find("stationdata") > 0 or str(request.url.path).find("samba") > 0:
+            return await call_next(request)
+
+        try:
+            token = request.headers.get('authorization')
+            if token is None:
+                return JSONResponse(status_code=401, content={'detail': 'Not authenticated'})
+            if token.startswith("Bearer "):
+                token = token[7:]
+            else:
+                return JSONResponse(status_code=401, content={'detail': 'Invalid token type'})
+            
+            get_current_user(token)
+
+            return await call_next(request)
+        
+        except HTTPException as e:
+            return JSONResponse(status_code=e.status_code, content={'detail': str(e)})
+        except Exception as e:
+            return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content={'detail': 'Internal Server Error'})
+        
 origins = [
     "http://localhost:3000",
 ]
+
+app.add_middleware(AuthMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -43,7 +79,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 load_dotenv()
 
 # Secret key to encode JWT token
@@ -109,33 +144,6 @@ def get_current_user(token: str = Security(oauth2_scheme)):
     
     return db_user
 
-async def auth_middleware(request: Request, call_next):
-    # The paths to exclude from the middleware
-    EXCLUDE_PATHS_RE = re.compile(r'^/api/(login|register)$')
-    print(request.url.path, EXCLUDE_PATHS_RE)
-    if EXCLUDE_PATHS_RE.match(str(request.url.path)):
-        return await call_next(request)    
-
-    try:
-        token = request.headers.get("Authorization")
-        if token is None:
-            return JSONResponse(status_code=401, content={'detail': 'Not authenticated'})
-        if token.startswith("Bearer "):
-            token = token[7:]
-        else:
-            return JSONResponse(status_code=401, content={'detail': 'Invalid token type'})
-        
-        get_current_user(token)
-
-        return await call_next(request)
-     
-    except HTTPException as e:
-        return JSONResponse(status_code=e.status_code, content={'detail': e.detail})
-    except Exception as e:
-        return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
-app.middleware('http')(auth_middleware)
-
 class UnicornException(Exception):
     def __init__(self, name: str):
         self.name = name
@@ -199,7 +207,6 @@ async def login_user(credential: LoginForm):
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(data={"sub": user.email}, expires_delta=access_token_expires)
     return {"access_token": access_token, "token_type": "bearer"}
-
 
 @app.get("/api/stationdata/{station_id}")
 async def get_station_data(request: Request, station_id: str = "", From: Union[str, None] = None):
@@ -278,40 +285,40 @@ def get_resource(path):
     with open(complete_path, "rb") as fp:
         return Response(content=fp.read(), media_type=mimetype)
 
-@app.get("/download-sambalog")
+@app.get("/api/download-sambalog")
 async def download_applog():
     return FileResponse(
         path="logs/samba_svc.txt",
         filename="samba_svc.txt",
         media_type="application/octet-stream")
 
-@app.get("/download-proxylog")
+@app.get("/api/download-proxylog")
 async def download_proxylog():
     return FileResponse(
         path="/logs/proxy_svc.txt",
         filename="proxy_svc.txt",
         media_type="application/octet-stream")
 
-@app.get("/download-weblog")
+@app.get("/api/download-weblog")
 async def download_applog():
     return FileResponse(
         path="logs/web_svc.txt",
         filename="web_svc.txt",
         media_type="application/octet-stream")
 
-@app.get("/cfg")
+@app.get("/api/cfg")
 async def get_cfg():
     with open("conf.yaml", "rt") as fp:
         return load(fp, Loader=Loader)
 
-@app.post("/cfg")
+@app.post("/api/cfg")
 async def set_cfg(body: Dict):
     with open("conf.yaml", "wt") as fp:
         dump(body, fp)
 
     return {}
 
-@app.post("/push_log")
+@app.post("/api/push_log")
 async def push_log(body: Dict):
     do_push_log(body)
 
@@ -319,47 +326,33 @@ async def push_log(body: Dict):
         "status": "ok"
     }
 
-@app.api_route("/{path_name:path}", methods=["GET"])
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from pathlib import Path
+
+# Make sure to set the correct path to your 'build' folder
+build_path = Path(__file__).parent / "config"
+app.mount("/static", StaticFiles(directory=build_path / "static"), name="static")
+
+@app.get("/{path_name:path}", response_class=HTMLResponse)
 def receiver(path_name: str):
     whitelist = [
         "",
         "log",
-        "manifest.json"
+        "manifest.json",
     ]
     if path_name.endswith(".css") \
             or path_name.endswith(".js") \
             or path_name.endswith(".html") \
             or path_name.endswith(".png") \
-            or path_name in whitelist:
+            or path_name.endswith("login") \
+            or path_name.endswith("register") \
+            or path_name in whitelist: 
 
-        if path_name == "" or path_name == "log":
+        if path_name == "" or path_name == "log" or path_name.endswith("login") or path_name.endswith("register"):
             path_name = "index.html"
 
         return get_resource(path_name)
-
-@app.api_route("/{path_name:path}", methods=["POST"])
-async def ad_message(req: Request, path_name: str, NAME: str, IP: str, PORT: str):
-    name = NAME
-    ip = IP
-    port = PORT
-    if (port is None) or (len(port) == 0):
-        port = '1001'
-
-    logging.info(f"Got request for name: '{ name }', ip: '{ ip }', port: '{ port }' (path: '{ path_name }')")
-
-    if app_queue is not None:
-        try:
-            msg = {
-                "IP": ip,
-                "NAME": name,
-                "PORT": port
-            }
-            app_queue.put_nowait(msg)
-            logging.info(f"Queued message: { json.dumps(msg) }")
-        except:
-            logging.warn("Can't enqueue message")
-
-    return "<html><body><strong>\nSuccessfully Registered!\n</strong></body></html>"
 
 @app.websocket("/logging")
 async def websocket_endpoint(websocket: WebSocket):
