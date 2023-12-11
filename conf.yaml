@@ -1,218 +1,138 @@
 agent:
-  host: 192.168.108.69
-  port: 8090
+  host: 10.80.16.178
+  port: 8091
 proxies:
-  - alias: IMPE Contagem 01
+  - alias: STM Contagem 15
     auto_connect: true
-    location: Brazil
-    name: IMPE Contagem 01
-    origin: FITZE014:1001
-    port: 1171
+    name: STM Contagem 15
+    origin: 10.85.60.33:1001
+    port: 6815
     reconnect_inverval: 10
-  - alias: IMPE Contagem 02
+  - alias: STM Contagem 02
     auto_connect: true
-    location: United States
-    name: IMPE Contagem 02
-    origin: BRITZPC000021:1001
-    port: 1172
+    name: STM Contagem 02
+    origin: 10.85.60.16:1001
+    port: 6802
     reconnect_inverval: 10
-  - alias: IMPE Contagem 03
+  - alias: STM Contagem 05
     auto_connect: true
-    name: IMPE Contagem 03
-    origin: BRIM1PC000011:1001
-    port: 1173
+    name: STM Contagem 05
+    origin: 10.85.60.32:1001
+    port: 6805
     reconnect_inverval: 10
-  - alias: IMPE Contagem 04
+  - alias: STM Contagem 07
     auto_connect: true
-    name: IMPE Contagem 04
-    origin: BRIM1PC000004:1001
-    port: 1174
+    name: STM Contagem 07
+    origin: 10.85.60.18:1001
+    port: 6807
     reconnect_inverval: 10
-  - alias: IMPE Contagem 05
+  - alias: STM Contagem 14
     auto_connect: true
-    name: IMPE Contagem 05
-    origin: BRITZPC000008:1001
-    port: 1175
+    name: STM Contagem 14
+    origin: 10.85.60.41:1001
+    port: 6814
     reconnect_inverval: 10
-  - alias: IMPE Contagem 06
+  - alias: STM Contagem 17
     auto_connect: true
-    name: IMPE Contagem 06
-    origin: FITZE027:1001
-    port: 1176
+    name: STM Contagem 17
+    origin: 10.85.60.34:1001
+    port: 6817
     reconnect_inverval: 10
-  - alias: IMPE Contagem 07
+  - alias: STM Contagem 19
     auto_connect: true
-    name: IMPE Contagem 07
-    origin: BRIM1PC000009:1001
-    port: 1177
+    name: STM Contagem 19
+    origin: 10.85.60.29:1001
+    port: 6819
     reconnect_inverval: 10
-  - alias: IMPE Contagem 09
+  - alias: STM Contagem 21
     auto_connect: true
-    name: IMPE Contagem 09
-    origin: BRITZPC000003:1001
-    port: 1179
+    name: STM Contagem 21
+    origin: 10.85.60.24:1001
+    port: 6821
     reconnect_inverval: 10
-  - alias: PAF Contagem 01
+  - alias: STM Contagem 24
     auto_connect: true
-    name: PAF Contagem 01
-    origin: BRPAVPC000010:1001
-    port: 1591
+    name: STM Contagem 24
+    origin: 10.85.60.50:1001
+    port: 6824
     reconnect_inverval: 10
-  - alias: PAF Contagem 02
+  - alias: BSB Contagem 10
     auto_connect: true
-    name: PAF Contagem 02
-    origin: BRPAVPC000012:1001
-    port: 1592
+    name: BSB Contagem 10
+    origin: 10.86.1.139:1001
+    port: 4510
     reconnect_inverval: 10
-  - alias: PAF Contagem 03
+  - alias: BSB Contagem 11
     auto_connect: true
-    name: PAF Contagem 03
-    origin: BRPAVPC000011:1001
-    port: 1593
+    name: BSB Contagem 11
+    origin: 10.86.1.39:1001
+    port: 4511
     reconnect_inverval: 10
-  - alias: PAF Contagem 03
+  - alias: BSB Contagem 12
     auto_connect: true
-    name: PAF Contagem 03
-    origin: BRPAVPC000011:1001
-    port: 1593
+    name: BSB Contagem 12
+    origin: 10.86.1.147:1001
+    port: 4512
     reconnect_inverval: 10
-  - alias: MRG Contagem 01
+  - alias: BSB Contagem 13
     auto_connect: true
-    name: MRG Contagem 01
-    origin: 10.87.212.13:1001
-    port: 2071
+    name: BSB Contagem 13
+    origin: 10.86.1.149:1001
+    port: 4513
     reconnect_inverval: 10
-  - alias: MRG Contagem 02
+  - alias: BSB Contagem 16
     auto_connect: true
-    name: MRG Contagem 02
-    origin: 10.87.212.14:1001
-    port: 2072
+    name: BSB Contagem 16
+    origin: 10.86.1.153:1001
+    port: 4516
     reconnect_inverval: 10
-  - alias: MRG Contagem 03
+  - alias: BSB Contagem 20
     auto_connect: true
-    name: MRG Contagem 03
-    origin: 10.87.212.10:1001
-    port: 2073
+    name: BSB Contagem 20
+    origin: 10.86.1.125:1001
+    port: 4520
     reconnect_inverval: 10
-  - alias: MRG Contagem 04
+  - alias: BSB Contagem 14
     auto_connect: true
-    name: MRG Contagem 04
-    origin: 10.87.212.30:1001
-    port: 2074
+    name: BSB Contagem 14
+    origin: 10.86.1.152:1001
+    port: 4514
     reconnect_inverval: 10
-  - alias: MRG Contagem 05
+  - alias: BAC Contagem 02
     auto_connect: true
-    name: MRG Contagem 05
-    origin: 10.87.212.19:1001
-    port: 2075
+    name: BAC Contagem 02
+    origin: 10.82.16.40:1001
+    port: 13102
     reconnect_inverval: 10
-  - alias: MRG Contagem 06
+  - alias: BAC Contagem 03
     auto_connect: true
-    name: MRG Contagem 06
-    origin: 10.87.212.17:1001
-    port: 2076
+    name: BAC Contagem 03
+    origin: 10.82.16.45:1001
+    port: 13103
     reconnect_inverval: 10
-  - alias: TESTE Simulador
-    auto_connect: false
-    name: TESTE Simulador
-    origin: 10.80.16.178:2010
-    port: 2077
-    reconnect_inverval: 10
-  - alias: IGT Contagem 01
+  - alias: BAC Contagem 04
     auto_connect: true
-    name: IGT Contagem 01
-    origin: BRFO1PC000008:1001
-    port: 2111
+    name: BAC Contagem 04
+    origin: 10.82.16.65:1001
+    port: 13104
     reconnect_inverval: 10
-  - alias: IGT Contagem 02
+  - alias: BAC Contagem 06
     auto_connect: true
-    name: IGT Contagem 02
-    origin: BRFO1PC000011:1001
-    port: 2112
+    name: BAC Contagem 06
+    origin: 10.82.16.62:1001
+    port: 13106
     reconnect_inverval: 10
-  - alias: IGT Contagem 03
+  - alias: BAC Contagem 07
     auto_connect: true
-    name: IGT Contagem 03
-    origin: BRFO1PC000010:1001
-    port: 2113
+    name: BAC Contagem 07
+    origin: 10.82.16.64:1001
+    port: 13107
     reconnect_inverval: 10
-  - alias: IGT Contagem 04
+  - alias: BAC Contagem 10
     auto_connect: true
-    name: IGT Contagem 04
-    origin: BRFO1PC000006:1001
-    port: 2114
-    reconnect_inverval: 10
-  - alias: CGR Contagem 01
-    auto_connect: true
-    name: CGR Contagem 01
-    origin: 10.86.48.39:1001
-    port: 3901
-    reconnect_inverval: 10
-  - alias: CGR Contagem 02
-    auto_connect: true
-    name: CGR Contagem 02
-    origin: 10.86.48.14:1001
-    port: 3902
-    reconnect_inverval: 10
-  - alias: CGR Contagem 03
-    auto_connect: true
-    name: CGR Contagem 03
-    origin: 10.86.48.43:1001
-    port: 3903
-    reconnect_inverval: 10
-  - alias: CGR Contagem 04
-    auto_connect: true
-    name: CGR Contagem 04
-    origin: 10.86.48.27:1001
-    port: 3904
-    reconnect_inverval: 10
-  - alias: CGR Contagem 05
-    auto_connect: true
-    name: CGR Contagem 05
-    origin: 10.86.48.42:1001
-    port: 3905
-    reconnect_inverval: 10
-  - alias: CGR Contagem 06
-    auto_connect: true
-    name: CGR Contagem 06
-    origin: 10.86.48.15:1001
-    port: 3906
-    reconnect_inverval: 10
-  - alias: CGR Contagem 07
-    auto_connect: true
-    name: CGR Contagem 07
-    origin: 10.86.48.30:1001
-    port: 3907
-    reconnect_inverval: 10
-  - alias: CGR Contagem 08
-    auto_connect: true
-    name: CGR Contagem 08
-    origin: 10.86.48.40:1001
-    port: 3908
-    reconnect_inverval: 10
-  - alias: CGR Contagem 09
-    auto_connect: true
-    name: CGR Contagem 09
-    origin: 10.86.48.28:1001
-    port: 3909
-    reconnect_inverval: 10
-  - alias: CGR Contagem 10
-    auto_connect: true
-    name: CGR Contagem 10
-    origin: 10.86.48.34:1001
-    port: 3910
-    reconnect_inverval: 10
-  - alias: CGR Contagem 11
-    auto_connect: true
-    name: CGR Contagem 11
-    origin: 10.86.48.35:1001
-    port: 3911
-    reconnect_inverval: 10
-  - alias: CGR Contagem 12
-    auto_connect: true
-    name: CGR Contagem 12
-    origin: 10.86.48.36:1001
-    port: 3912
+    name: BAC Contagem 10
+    origin: 10.82.16.42:1001
+    port: 13110
     reconnect_inverval: 10
   - alias: BSB Contagem 01
     auto_connect: true
@@ -268,47 +188,11 @@ proxies:
     origin: 10.86.1.142:1001
     port: 4509
     reconnect_inverval: 10
-  - alias: BSB Contagem 10
-    auto_connect: true
-    name: BSB Contagem 10
-    origin: 10.86.1.139:1001
-    port: 4510
-    reconnect_inverval: 10
-  - alias: BSB Contagem 11
-    auto_connect: true
-    name: BSB Contagem 11
-    origin: 10.86.1.39:1001
-    port: 4511
-    reconnect_inverval: 10
-  - alias: BSB Contagem 12
-    auto_connect: true
-    name: BSB Contagem 12
-    origin: 10.86.1.147:1001
-    port: 4512
-    reconnect_inverval: 10
-  - alias: BSB Contagem 13
-    auto_connect: true
-    name: BSB Contagem 13
-    origin: 10.86.1.149:1001
-    port: 4513
-    reconnect_inverval: 10
-  - alias: BSB Contagem 14
-    auto_connect: true
-    name: BSB Contagem 14
-    origin: 10.86.1.152:1001
-    port: 4514
-    reconnect_inverval: 10
   - alias: BSB Contagem 15
     auto_connect: true
     name: BSB Contagem 15
     origin: 10.86.1.34:1001
     port: 4515
-    reconnect_inverval: 10
-  - alias: BSB Contagem 16
-    auto_connect: true
-    name: BSB Contagem 16
-    origin: 10.86.1.153:1001
-    port: 4516
     reconnect_inverval: 10
   - alias: BSB Contagem 17
     auto_connect: true
@@ -327,18 +211,6 @@ proxies:
     name: BSB Contagem 19
     origin: 10.86.1.144:1001
     port: 4519
-    reconnect_inverval: 10
-  - alias: BSB Contagem 20
-    auto_connect: true
-    name: BSB Contagem 20
-    origin: 10.86.1.125:1001
-    port: 4520
-    reconnect_inverval: 10
-  - alias: BSB Contagem 20
-    auto_connect: true
-    name: BSB Contagem 20
-    origin: 10.86.1.125:1001
-    port: 4520
     reconnect_inverval: 10
   - alias: BSB Contagem 21
     auto_connect: true
@@ -490,6 +362,54 @@ proxies:
     origin: 10.86.1.92:1001
     port: 4545
     reconnect_inverval: 10
+  - alias: PAF Contagem 02
+    auto_connect: true
+    name: PAF Contagem 02
+    origin: BRPAVPC000012:1001
+    port: 1592
+    reconnect_inverval: 10
+  - alias: MRG Contagem 01
+    auto_connect: true
+    name: MRG Contagem 01
+    origin: 10.87.212.13:1001
+    port: 2071
+    reconnect_inverval: 10
+  - alias: MRG Contagem 02
+    auto_connect: true
+    name: MRG Contagem 02
+    origin: 10.87.212.14:1001
+    port: 2072
+    reconnect_inverval: 10
+  - alias: MRG Contagem 03
+    auto_connect: true
+    name: MRG Contagem 03
+    origin: 10.87.212.10:1001
+    port: 2073
+    reconnect_inverval: 10
+  - alias: MRG Contagem 04
+    auto_connect: true
+    name: MRG Contagem 04
+    origin: 10.87.212.30:1001
+    port: 2074
+    reconnect_inverval: 10
+  - alias: MRG Contagem 05
+    auto_connect: true
+    name: MRG Contagem 05
+    origin: 10.87.212.19:1001
+    port: 2075
+    reconnect_inverval: 10
+  - alias: MRG Contagem 06
+    auto_connect: true
+    name: MRG Contagem 06
+    origin: 10.87.212.17:1001
+    port: 2076
+    reconnect_inverval: 10
+  - alias: TESTE Simulador
+    auto_connect: false
+    name: TESTE Simulador
+    origin: 10.80.16.178:2010
+    port: 2077
+    reconnect_inverval: 10
   - alias: GNY Contagem 01
     auto_connect: true
     name: GNY Contagem 01
@@ -514,23 +434,11 @@ proxies:
     origin: 10.86.17.80:1001
     port: 4704
     reconnect_inverval: 10
-  - alias: GNY Contagem 06
-    auto_connect: true
-    name: GNY Contagem 06
-    origin: 10.86.17.67:1001
-    port: 4706
-    reconnect_inverval: 10
   - alias: GNY Contagem 08
     auto_connect: true
     name: GNY Contagem 08
     origin: 10.86.17.46:1001
     port: 4708
-    reconnect_inverval: 10
-  - alias: GNY Contagem 09
-    auto_connect: true
-    name: GNY Contagem 09
-    origin: 10.86.17.74:1001
-    port: 4709
     reconnect_inverval: 10
   - alias: GNY Contagem 10
     auto_connect: true
@@ -562,12 +470,6 @@ proxies:
     origin: 10.86.17.81:1001
     port: 4715
     reconnect_inverval: 10
-  - alias: GNY Contagem 16
-    auto_connect: true
-    name: GNY Contagem 16
-    origin: 10.86.17.31:1001
-    port: 4716
-    reconnect_inverval: 10
   - alias: GNY Contagem 19
     auto_connect: true
     name: GNY Contagem 19
@@ -580,119 +482,143 @@ proxies:
     origin: 10.86.17.76:1001
     port: 4721
     reconnect_inverval: 10
-  - alias: GNY Contagem 25
-    auto_connect: true
-    name: GNY Contagem 25
-    origin: 10.86.17.32:1001
-    port: 4725
-    reconnect_inverval: 10
   - alias: GNY Contagem 26
     auto_connect: true
     name: GNY Contagem 26
     origin: 10.86.17.99:1001
     port: 4726
     reconnect_inverval: 10
-  - alias: STM Contagem 02
+  - alias: GNY Contagem 06
     auto_connect: true
-    name: STM Contagem 02
-    origin: 10.85.60.16:1001
-    port: 6802
+    name: GNY Contagem 06
+    origin: 10.86.17.67:1001
+    port: 4706
     reconnect_inverval: 10
-  - alias: STM Contagem 05
+  - alias: GNY Contagem 09
     auto_connect: true
-    name: STM Contagem 05
-    origin: 10.85.60.32:1001
-    port: 6805
+    name: GNY Contagem 09
+    origin: 10.86.17.74:1001
+    port: 4709
     reconnect_inverval: 10
-  - alias: STM Contagem 07
+  - alias: GNY Contagem 25
     auto_connect: true
-    name: STM Contagem 07
-    origin: 10.85.60.18:1001
-    port: 6807
+    name: GNY Contagem 25
+    origin: 10.86.17.32:1001
+    port: 4725
     reconnect_inverval: 10
-  - alias: STM Contagem 14
+  - alias: CGR Contagem 01
     auto_connect: true
-    name: STM Contagem 14
-    origin: 10.85.60.41:1001
-    port: 6814
+    name: CGR Contagem 01
+    origin: 10.86.48.39:1001
+    port: 3901
     reconnect_inverval: 10
-  - alias: STM Contagem 15
+  - alias: CGR Contagem 02
     auto_connect: true
-    name: STM Contagem 15
-    origin: 10.85.60.33:1001
-    port: 6815
+    name: CGR Contagem 02
+    origin: 10.86.48.14:1001
+    port: 3902
     reconnect_inverval: 10
-  - alias: STM Contagem 17
+  - alias: CGR Contagem 03
     auto_connect: true
-    name: STM Contagem 17
-    origin: 10.85.60.34:1001
-    port: 6817
+    name: CGR Contagem 03
+    origin: 10.86.48.43:1001
+    port: 3903
     reconnect_inverval: 10
-  - alias: STM Contagem 19
+  - alias: CGR Contagem 04
     auto_connect: true
-    name: STM Contagem 19
-    origin: 10.85.60.29:1001
-    port: 6819
+    name: CGR Contagem 04
+    origin: 10.86.48.27:1001
+    port: 3904
     reconnect_inverval: 10
-  - alias: STM Contagem 21
+  - alias: CGR Contagem 05
     auto_connect: true
-    name: STM Contagem 21
-    origin: 10.85.60.24:1001
-    port: 6821
+    name: CGR Contagem 05
+    origin: 10.86.48.42:1001
+    port: 3905
     reconnect_inverval: 10
-  - alias: STM Contagem 24
+  - alias: CGR Contagem 06
     auto_connect: true
-    name: STM Contagem 24
-    origin: 10.85.60.50:1001
-    port: 6824
+    name: CGR Contagem 06
+    origin: 10.86.48.15:1001
+    port: 3906
     reconnect_inverval: 10
-  - alias: RED Contagem 01
+  - alias: CGR Contagem 07
     auto_connect: true
-    name: RED Contagem 01
-    origin: 10.82.48.9:1001
-    port: 12601
+    name: CGR Contagem 07
+    origin: 10.86.48.30:1001
+    port: 3907
     reconnect_inverval: 10
-  - alias: RED Contagem 02
+  - alias: CGR Contagem 08
     auto_connect: true
-    name: RED Contagem 02
-    origin: 10.82.48.13:1001
-    port: 12602
+    name: CGR Contagem 08
+    origin: 10.86.48.40:1001
+    port: 3908
     reconnect_inverval: 10
-  - alias: BAC Contagem 02
+  - alias: CGR Contagem 09
     auto_connect: true
-    name: BAC Contagem 02
-    origin: 10.82.16.40:1001
-    port: 13102
+    name: CGR Contagem 09
+    origin: 10.86.48.28:1001
+    port: 3909
     reconnect_inverval: 10
-  - alias: BAC Contagem 03
+  - alias: CGR Contagem 10
     auto_connect: true
-    name: BAC Contagem 03
-    origin: 10.82.16.45:1001
-    port: 13103
+    name: CGR Contagem 10
+    origin: 10.86.48.34:1001
+    port: 3910
     reconnect_inverval: 10
-  - alias: BAC Contagem 04
+  - alias: CGR Contagem 11
     auto_connect: true
-    name: BAC Contagem 04
-    origin: 10.82.16.65:1001
-    port: 13104
+    name: CGR Contagem 11
+    origin: 10.86.48.35:1001
+    port: 3911
     reconnect_inverval: 10
-  - alias: BAC Contagem 06
+  - alias: CGR Contagem 12
     auto_connect: true
-    name: BAC Contagem 06
-    origin: 10.82.16.62:1001
-    port: 13106
+    name: CGR Contagem 12
+    origin: 10.86.48.36:1001
+    port: 3912
     reconnect_inverval: 10
-  - alias: BAC Contagem 07
+  - alias: BSB Contagem 20
     auto_connect: true
-    name: BAC Contagem 07
-    origin: 10.82.16.64:1001
-    port: 13107
+    name: BSB Contagem 20
+    origin: 10.86.1.125:1001
+    port: 4520
     reconnect_inverval: 10
-  - alias: BAC Contagem 10
+  - alias: GNY Contagem 16
     auto_connect: true
-    name: BAC Contagem 10
-    origin: 10.82.16.42:1001
-    port: 13110
+    name: GNY Contagem 16
+    origin: 10.86.17.31:1001
+    port: 4716
+    reconnect_inverval: 10
+  - alias: MAC Contagem 05
+    auto_connect: true
+    name: MAC Contagem 05
+    origin: BRMC2PC000146:1001
+    port: 16405
+    reconnect_inverval: 10
+  - alias: MAC Contagem 21
+    auto_connect: true
+    name: MAC Contagem 21
+    origin: BRMC2PC000139:1001
+    port: 16421
+    reconnect_inverval: 10
+  - alias: MAC Contagem 07
+    auto_connect: true
+    name: MAC Contagem 07
+    origin: BRMC2PC000148:1001
+    port: 16407
+    reconnect_inverval: 10
+  - alias: MAC Contagem 24
+    auto_connect: true
+    name: MAC Contagem 24
+    origin: BRMC2PC000147:1001
+    port: 16424
+    reconnect_inverval: 10
+  - alias: MAC Contagem 09
+    auto_connect: true
+    name: MAC Contagem 09
+    origin: BRMC2PC000137:1001
+    port: 16409
     reconnect_inverval: 10
   - alias: MAC Contagem 01
     auto_connect: true
@@ -706,29 +632,11 @@ proxies:
     origin: BRMC2PC000144:1001
     port: 16403
     reconnect_inverval: 10
-  - alias: MAC Contagem 04
+  - alias: MAC Contagem 15
     auto_connect: true
-    name: MAC Contagem 04
-    origin: BRMC2PC000140:1001
-    port: 16404
-    reconnect_inverval: 20
-  - alias: MAC Contagem 05
-    auto_connect: true
-    name: MAC Contagem 05
-    origin: BRMC2PC000146:1001
-    port: 16405
-    reconnect_inverval: 10
-  - alias: MAC Contagem 07
-    auto_connect: true
-    name: MAC Contagem 07
-    origin: BRMC2PC000148:1001
-    port: 16407
-    reconnect_inverval: 10
-  - alias: MAC Contagem 09
-    auto_connect: true
-    name: MAC Contagem 09
-    origin: BRMC2PC000137:1001
-    port: 16409
+    name: MAC Contagem 15
+    origin: BRMC2PC000150:1001
+    port: 16415
     reconnect_inverval: 10
   - alias: MAC Contagem 13
     auto_connect: true
@@ -736,29 +644,119 @@ proxies:
     origin: BRMC2PC000145:1001
     port: 16413
     reconnect_inverval: 10
-  - alias: MAC Contagem 15
+  - alias: MAC Contagem 04
     auto_connect: true
-    name: MAC Contagem 15
-    origin: BRMC2PC000150:1001
-    port: 16415
-    reconnect_inverval: 10
+    name: MAC Contagem 04
+    origin: BRMC2PC000140:1001
+    port: 16404
+    reconnect_inverval: 20
   - alias: MAC Contagem 04
     auto_connect: true
     name: MAC Contagem 20
     origin: BRMC2PC000153:1001
     port: 16420
     reconnect_inverval: 10
-  - alias: MAC Contagem 21
+  - alias: PAF Contagem 03
     auto_connect: true
-    name: MAC Contagem 21
-    origin: BRMC2PC000139:1001
-    port: 16421
+    name: PAF Contagem 03
+    origin: BRPAVPC000011:1001
+    port: 1593
     reconnect_inverval: 10
-  - alias: MAC Contagem 24
+  - alias: IGT Contagem 01
     auto_connect: true
-    name: MAC Contagem 24
-    origin: BRMC2PC000147:1001
-    port: 16424
+    name: IGT Contagem 01
+    origin: BRFO1PC000008:1001
+    port: 2111
+    reconnect_inverval: 10
+  - alias: IGT Contagem 02
+    auto_connect: true
+    name: IGT Contagem 02
+    origin: BRFO1PC000011:1001
+    port: 2112
+    reconnect_inverval: 10
+  - alias: IGT Contagem 03
+    auto_connect: true
+    name: IGT Contagem 03
+    origin: BRFO1PC000010:1001
+    port: 2113
+    reconnect_inverval: 10
+  - alias: IGT Contagem 04
+    auto_connect: true
+    name: IGT Contagem 04
+    origin: BRFO1PC000006:1001
+    port: 2114
+    reconnect_inverval: 10
+  - alias: RED Contagem 01
+    auto_connect: true
+    name: RED Contagem 01
+    origin: 10.82.48.9:1001
+    port: 12601
+    reconnect_inverval: 10
+  - alias: RED Contagem 02
+    auto_connect: true
+    name: RED Contagem 02
+    origin: 10.82.48.13:1001
+    port: 12602
+    reconnect_inverval: 10
+  - alias: IMPE Contagem 01
+    auto_connect: true
+    name: IMPE Contagem 01
+    origin: FITZE014:1001
+    port: 1171
+    reconnect_inverval: 10
+  - alias: IMPE Contagem 02
+    auto_connect: true
+    name: IMPE Contagem 02
+    origin: BRITZPC000021:1001
+    port: 1172
+    reconnect_inverval: 10
+  - alias: IMPE Contagem 03
+    auto_connect: true
+    name: IMPE Contagem 03
+    origin: BRIM1PC000011:1001
+    port: 1173
+    reconnect_inverval: 10
+  - alias: IMPE Contagem 04
+    auto_connect: true
+    name: IMPE Contagem 04
+    origin: BRIM1PC000004:1001
+    port: 1174
+    reconnect_inverval: 10
+  - alias: IMPE Contagem 05
+    auto_connect: true
+    name: IMPE Contagem 05
+    origin: BRITZPC000008:1001
+    port: 1175
+    reconnect_inverval: 10
+  - alias: IMPE Contagem 07
+    auto_connect: true
+    name: IMPE Contagem 07
+    origin: BRIM1PC000009:1001
+    port: 1177
+    reconnect_inverval: 10
+  - alias: IMPE Contagem 06
+    auto_connect: true
+    name: IMPE Contagem 06
+    origin: FITZE027:1001
+    port: 1176
+    reconnect_inverval: 10
+  - alias: IMPE Contagem 09
+    auto_connect: true
+    name: IMPE Contagem 09
+    origin: BRITZPC000003:1001
+    port: 1179
+    reconnect_inverval: 10
+  - alias: PAF Contagem 01
+    auto_connect: true
+    name: PAF Contagem 01
+    origin: BRPAVPC000010:1001
+    port: 1591
+    reconnect_inverval: 10
+  - alias: PAF Contagem 03
+    auto_connect: true
+    name: PAF Contagem 03
+    origin: BRPAVPC000011:1001
+    port: 1593
     reconnect_inverval: 10
 servers:
   - name: Server 1

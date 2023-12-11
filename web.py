@@ -148,9 +148,9 @@ admin_user = sqlite_db.get_user("development@aigsg.com")
 
 if admin_user is None:
     sqlite_db.save_user(
-        email="development@aigsg.com",
-        username="AIGSG",
-        hashed_password=get_password_hash("Aigsg2023"),
+        email=os.getenv("ADMIN_EMAIL"),
+        username=os.getenv("ADMIN_USERNAME"),
+        hashed_password=get_password_hash(os.getenv("ADMIN_PASSWORD")),
         disabled=False,
     )
 
