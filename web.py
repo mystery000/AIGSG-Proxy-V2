@@ -144,6 +144,16 @@ def get_current_user(token: str = Security(oauth2_scheme)):
     
     return db_user
 
+admin_user = sqlite_db.get_user("development@aigsg.com")
+
+if admin_user is None:
+    sqlite_db.save_user(
+        email="development@aigsg.com",
+        username="AIGSG",
+        hashed_password=get_password_hash("Aigsg2023"),
+        disabled=False,
+    )
+
 class UnicornException(Exception):
     def __init__(self, name: str):
         self.name = name

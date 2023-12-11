@@ -384,7 +384,7 @@ function Config() {
     const compare = (a: TProxy, b: TProxy) => {
       switch (sortBy) {
         case "location":
-          return a.location.localeCompare(b.location);
+          return (a?.location || "").localeCompare(b?.location || "");
         case "port":
           return a.port - b.port;
         case "name":
@@ -403,7 +403,7 @@ function Config() {
       if (!filterBy) return true;
       const keyword = filterBy.toLowerCase();
       const isMatch =
-        proxy.location.toLowerCase().includes(keyword) ||
+        (proxy?.location || "").toLowerCase().includes(keyword) ||
         proxy.name.toLowerCase().includes(keyword) ||
         proxy.origin.toLowerCase().includes(keyword) ||
         proxy.port.toString().includes(keyword);

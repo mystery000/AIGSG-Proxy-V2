@@ -80,7 +80,7 @@ class Conf():
                 origin = proxy["origin"]
                 port = int(proxy["port"])
                 name = proxy["name"]
-                location = proxy["location"]
+                location = proxy['location'] if 'location' in proxy else ''
                 auto_connect = proxy["auto_connect"]
                 reconnect_inverval = float(proxy["reconnect_inverval"])
                 self._proxies.append(ProxyInfo(
@@ -106,6 +106,7 @@ class Conf():
 
 
     def get_proxies(self) -> List[ProxyInfo]:
+        for proxy in self._proxies: print(proxy.location)
         return self._proxies
 
 
