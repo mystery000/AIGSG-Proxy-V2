@@ -1,5 +1,6 @@
-PyJWT=2.8.0
-passlib=1.7.4
-fastapi=0.95.2
-python-dotenv=1.0.0
-bcrypt=3.1.0
+PyJWT==2.8.0
+passlib==1.7.4
+fastapi==0.95.2
+python-dotenv==1.0.0
+bcrypt==3.1.0
+Python-Jose==3.3.0

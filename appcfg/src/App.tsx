@@ -418,8 +418,8 @@ function Config() {
 
   if (msg) {
     return (
-      <div className='flex h-screen justify-center items-center w-1/3 m-auto text-red-600'>
-        {msg}
+      <div className='flex h-screen justify-center items-center w-1/3 m-auto text-red-600 text-center'>
+        <div>{msg}</div>
       </div>
     );
   }

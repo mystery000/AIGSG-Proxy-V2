@@ -17,6 +17,7 @@ New-Item -ItemType Directory -Path "$TARGETDIR\backup"
 New-Item -ItemType Directory -Path "$TARGETDIR\watcher"
 New-Item -ItemType Directory -Path "$TARGETDIR\config"
 
+Copy-Item -Path "..\.env" -Destination $TARGETDIR
 Copy-Item -Path "icon.ico" -Destination $TARGETDIR
 Copy-Item -Path "..\*.py" -Destination $TARGETDIR
 Copy-Item -Path "..\watcher.txt" -Destination $TARGETDIR
