@@ -19,7 +19,7 @@ class Db():
     def get_samba(self, source: str, created_at: str):
         return get_samba(self._db, source, created_at)
     
-    def save_user(self, username: str, email: str, hashed_password: str, disabled: bool = False):
+    def save_user(self, username: str, email: str, hashed_password: str, disabled: bool = True):
         return save_user(self._db, username, email, hashed_password, disabled)
     
     def get_user(self, email: str):

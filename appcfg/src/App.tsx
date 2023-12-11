@@ -212,6 +212,7 @@ var defaultCfg: TCfgObj = {
 };
 
 function Config() {
+  const [msg, setMsg] = useState("");
   const [cfg, setCfg] = useState<TCfgObj>(defaultCfg);
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState("location");
@@ -222,14 +223,22 @@ function Config() {
   useEffect(() => {
     async function readConfig() {
       if (!accessToken) return;
-      const response = await axios.get(`${BASE_URL}/cfg`, {
-        headers: {
-          Acccept: "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      setCfg(response.data as TCfgObj);
-      setLoading(false);
+      setLoading(true);
+      setMsg("");
+      try {
+        const response = await axios.get(`${BASE_URL}/cfg`, {
+          headers: {
+            Acccept: "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        setCfg(response.data as TCfgObj);
+      } catch (error) {
+        // @ts-ignore
+        setMsg(error.response.data.detail);
+      } finally {
+        setLoading(false);
+      }
     }
     readConfig();
   }, [accessToken]);
@@ -406,6 +415,14 @@ function Config() {
   let lastTabIndex = 0;
 
   if (loading) return <div className='spinner'></div>;
+
+  if (msg) {
+    return (
+      <div className='flex h-screen justify-center items-center w-1/3 m-auto text-red-600'>
+        {msg}
+      </div>
+    );
+  }
 
   return (
     <div className='flex flex-col justify-center items-center w-1/3 m-auto'>

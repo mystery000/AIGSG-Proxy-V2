@@ -17,5 +17,5 @@ class UserData(Base):
     username = Column(String, index=True)
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
-    disabled = Column(Boolean, default=False)
+    disabled = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), index=True)

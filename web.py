@@ -63,9 +63,9 @@ class AuthMiddleware(BaseHTTPMiddleware):
             return await call_next(request)
         
         except HTTPException as e:
-            return JSONResponse(status_code=e.status_code, content={'detail': str(e)})
+            return JSONResponse(status_code=e.status_code, content={'detail': e.detail})
         except Exception as e:
-            return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content={'detail': 'Internal Server Error'})
+            return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={'detail': str(e)})
         
 origins = [
     "http://localhost:3000",

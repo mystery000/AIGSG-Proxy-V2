@@ -39,7 +39,7 @@ def get_samba(db: Session, source: str, created_at: str) -> None:
 
     return posData
 
-def save_user(db: Session, username: str, email: str, hashed_password: str, disabled: bool = False):
+def save_user(db: Session, username: str, email: str, hashed_password: str, disabled: bool = True):
     row = models.UserData(
         username=username, 
         email=email, 
